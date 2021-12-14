@@ -1,10 +1,6 @@
 class CampersController < ApplicationController
    rescue_from ActiveRecord::RecordNotFound, with: :throw_error
-       desc ""
-       task : :environment do
-           
-       end
-   end
+
     
     def index
         campers= Camper.all 
@@ -32,4 +28,22 @@ class CampersController < ApplicationController
        render json: {"error": "Camper not found"}, status: 404
     end
 
+
+    def create
+        camper = Camper.create(camper_params)
+       if camper.valid?
+        render json: camper, status: 201
+       else 
+        render json: {errors: camper.errors.full_messages}, status: 400
+       end
+
+    end
+
+
+    def camper_params
+        params.permit(:name, :age)
+    end
+   
+
+    
 end
